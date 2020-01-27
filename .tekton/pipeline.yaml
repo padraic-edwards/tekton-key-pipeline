@@ -1,0 +1,60 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: pipeline
+spec:
+  params:
+    - name: pipeline-pvc
+      description: the pipeline pvc name
+    - name: repository
+      description: the git repo
+    - name: revision
+      description: the branch for the git repo
+    - name: apikey
+      description: the ibmcloud api key
+    - name: registryNamespace
+      description: the ibmcloud registry namespace
+    - name: cluster
+      description: The IBM Cloud Kubernetes cluster name
+    - name: registryRegion
+      description: the ibmcloud registry region
+      default: us-south
+    - name: clusterRegion
+      description: The IBM Cloud Kubernetes cluster region
+      default: us-south
+    - name: clusterNamespace
+      description: The Kubernetes cluster namespace
+      default: prod
+    - name: vaultInstance
+      description: The name of the Key Protect instance
+    - name: buildSigner
+      description: The build signer
+    - name: validationSigner
+      description: The validation signer
+    - name: resourceGroup
+      description: The resource group
+  tasks:
+    - name: pipeline-build-task
+      taskRef:
+        name: build-task
+      params:
+        - name: task-pvc
+          value: $(params.pipeline-pvc)
+        - name: repository
+          value: $(params.repository)
+        - name: revision
+          value: $(params.revision)
+        - name: apikey
+          value: $(params.apikey)
+        - name: registryNamespace
+          value: $(params.registryNamespace)
+        - name: registryRegion
+          value: $(params.registryRegion)
+        - name: vaultInstance
+          value: $(params.vaultInstance)
+        - name: buildSigner
+          value: $(params.buildSigner)
+        - name: validationSigner
+          value: $(params.validationSigner)
+        - name: resourceGroup
+          value: $(params.resourceGroup)        
